@@ -1,0 +1,60 @@
+step 1
+ 
+let values = []
+        for (let i = 0; i < $(".input_field").length; i++) {
+            values.push($(".input_field").eq(i).val())
+        }
+---------------------------------------------------
+step 2
+
+ let data = {
+            "story_id": $("#story_id").val(),
+            "values": values
+        }
+-----------------------------------------------------
+step 3
+
+ $.ajax({
+            url: "/post-answers",
+            type: "post",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (result) {
+                $("#result").html(result.result)
+                $("#result_container").removeClass("hidden")
+            },
+            error: function (result) {
+                alert(result.responseJSON.message)
+            }
+        })
+-----------------------------------------------------------
+step 4
+
+@app.route("/get-story")
+def get_story():
+    return jsonify({
+        "status": "success",
+        "story": random.choice(stories)
+    })
+-------------------------------------------------------
+step 5
+
+In Index.js
+
+$(document).ready(function () {
+    getStory();
+})
+
+function getStory() {
+    $.ajax({
+        url: "/get-story",
+        type: "get",
+        success: function (result) {
+            displayStory(result.story)
+        },
+        error: function (result) {
+            alert(result.responseJSON.message)
+        }
+    })
+}
